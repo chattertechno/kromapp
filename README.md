@@ -23,8 +23,12 @@ npm install -g strapi
 ```
 then
 
+
+
 ```bash
 strapi new <your project>
+
+cd <your project>
 ```
 you can choose database environment but I recommend to use mongoDb or MySql
 
