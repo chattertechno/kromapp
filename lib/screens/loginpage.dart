@@ -6,6 +6,20 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final _formkey = GlobalKey<FormState>();
+
+  String _username, _email, _password;
+  
+   bool _obscureText = true;
+
+  void _submit() {
+    final form = _formkey.currentState;
+
+    if (form.validate()) {
+      form.save();
+      print('username: $_username, Email: $_email, Password: $_password');
+    }
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,11 +61,14 @@ class _LoginPageState extends State<LoginPage> {
           Container(
             padding: EdgeInsets.only(top: 35.0, left: 20.0, right: 20.0),
             child: Form(
+              key: _formkey,
               child: Column(
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
+                      onSaved: (val) => _username = val,
+                      validator: (val) => val.length < 6 ? 'Username too short' : null,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                             icon: Icon(Icons.person),
@@ -61,12 +78,15 @@ class _LoginPageState extends State<LoginPage> {
                                 fontWeight: FontWeight.bold,
                                 color: Colors.grey
                         ),
+                        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.green)),
                       ),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
+                      onSaved: (val) => _email = val,
+                      validator: (val) => !val.contains('@') ? 'Invalid email' : null,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                             icon: Icon(Icons.email),
@@ -76,14 +96,25 @@ class _LoginPageState extends State<LoginPage> {
                                 fontWeight: FontWeight.bold,
                                 color: Colors.grey
                         ),
+                        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.green))
                       ),
                     ),
                   ),
-                  
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
+                      onSaved: (val) => _password = val,
+                      validator: (val) => val.length < 6 ? 'Password too short' : null,
+                      obscureText: _obscureText,
                         decoration: InputDecoration(
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              setState(() => _obscureText = !_obscureText);
+                            },
+                            child: Icon(
+                              _obscureText ? Icons.visibility : Icons.visibility_off
+                              ),
+                          ),
                           border: OutlineInputBorder(),
                             icon: Icon(Icons.lock),
                             labelText: 'Password',
@@ -92,10 +123,47 @@ class _LoginPageState extends State<LoginPage> {
                                 fontWeight: FontWeight.bold,
                                 color: Colors.grey
                         ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.green),
+                        )
                       ),
                     ),
                   ),
-                ],
+                SizedBox(height: 5.0,),
+                Padding(
+                  padding: EdgeInsets.only(top: 20.0),
+                  child: Column(children: <Widget>[
+                    RaisedButton(
+                      child: Text('Submit'),
+                      elevation: 8.0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      ),
+                      color: Colors.cyan,
+                      onPressed: _submit,
+                    ),
+                    FlatButton(
+                      child: Text('Existing user? Login'),
+                      onPressed: () => print('user'),
+                    )
+                  ],),
+                ),
+
+                // Container(
+                //   alignment: Alignment(1.0, 0.0),
+                //   padding: EdgeInsets.only(top: 15.0, left: 20.0),
+                //   child: InkWell(
+                //     onTap: () => print('fuckoff'),
+                //     child: Text('Forget Password',
+                //     style: TextStyle(color: Colors.green,
+                //     fontWeight: FontWeight.bold,
+                //     fontFamily: 'MontSerrat',
+                //     decoration: TextDecoration.underline
+                //      ),
+                //     ),
+                //   ),
+                //  )
+               ],
               ),
             ),
           )
@@ -104,3 +172,4 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+
